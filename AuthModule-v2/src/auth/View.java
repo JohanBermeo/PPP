@@ -7,11 +7,11 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VistaLogrosSwing extends JFrame {
+public class View extends JFrame {
 
     private List<String> listaLogros = new ArrayList<>();
 
-    public VistaLogrosSwing() {
+    public View() {
         super("App Logros Personales");
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
