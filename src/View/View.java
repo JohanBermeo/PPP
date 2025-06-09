@@ -1,11 +1,10 @@
 package View;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class View extends JFrame {
 
@@ -117,23 +116,18 @@ public class View extends JFrame {
         JScrollPane scrollDescripcion = new JScrollPane(descripcionArea);
         scrollDescripcion.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
 
-        JLabel lblDificultad = new JLabel("Nivel de dificultad (1-5):");
-        lblDificultad.setForeground(Color.WHITE);
-        lblDificultad.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        SpinnerNumberModel modeloDificultad = new SpinnerNumberModel(1, 1, 5, 1);
-        JSpinner dificultadSpinner = new JSpinner(modeloDificultad);
-        dificultadSpinner.setMaximumSize(new Dimension(60, 30));
-
         panelCampos.add(lblNombre);
         panelCampos.add(nombreField);
         panelCampos.add(Box.createRigidArea(new Dimension(0, 10)));
         panelCampos.add(lblDescripcion);
         panelCampos.add(scrollDescripcion);
-        panelCampos.add(Box.createRigidArea(new Dimension(0, 10)));
-        panelCampos.add(lblDificultad);
-        panelCampos.add(dificultadSpinner);
 
         dialog.add(panelCampos, BorderLayout.CENTER);
+
+        // Crear una función que exporte los logros y los envie al modelo para guardado
+        // ----------------------------------------------------------------------------
+
+        // ----------------------------------------------------------------------------
 
         // Panel botones
         JPanel panelBotones = new JPanel();
@@ -148,14 +142,13 @@ public class View extends JFrame {
         btnAceptar.addActionListener(e -> {
             String nombre = nombreField.getText().trim();
             String descripcion = descripcionArea.getText().trim();
-            int dificultad = (int) dificultadSpinner.getValue();
 
             if (nombre.isEmpty() || descripcion.isEmpty()) {
                 JOptionPane.showMessageDialog(dialog,
                         "Por favor complete todos los campos.",
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                String logro = nombre + " (Dificultad: " + dificultad + ")\n" + descripcion;
+                String logro = nombre + ": " + descripcion;
                 listaLogros.add(logro);
                 JOptionPane.showMessageDialog(dialog,
                         "Logro registrado con éxito:\n" + nombre,
@@ -169,6 +162,9 @@ public class View extends JFrame {
         dialog.setVisible(true);
     }
 
+
+    // Hacer que el controlador traiga la información de cada usuario y la presente
+    // -----------------------------------------------------
     private void mostrarLogros() {
     if (listaLogros.isEmpty()) {
         JOptionPane.showMessageDialog(this,
@@ -176,6 +172,7 @@ public class View extends JFrame {
                 "Mis Logros", JOptionPane.INFORMATION_MESSAGE);
         return;
     }
+    // -----------------------------------------------------
 
     JDialog dialog = new JDialog(this, "Mis Logros", true);
     dialog.setSize(450, 350);
@@ -236,9 +233,13 @@ public class View extends JFrame {
         panelContenido.setBorder(new EmptyBorder(20, 20, 20, 20));
         panelContenido.setLayout(new BoxLayout(panelContenido, BoxLayout.Y_AXIS));
 
+        // Hacer que el controlador traiga la información de los usuarios y la presente
+        // ----------------------------------------------------------------------
         JLabel lblUsuarioTop = new JLabel("Usuario con más logros: Ana");
         JLabel lblLogroComun = new JLabel("Logro más común: 'Aprendí POO'");
         JLabel lblTotal = new JLabel("Total logros registrados: " + listaLogros.size());
+        // -------------------------------------------------------------------
+
 
         Font fuente = new Font("Segoe UI", Font.PLAIN, 16);
         Color colorTexto = Color.WHITE;
