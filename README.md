@@ -37,3 +37,5 @@ Deben entregar un PDF con los pantallazos de la ejecución del programa, así co
 proyecto exportado con Eclipse. Ambos archivos nombrados con sus códigos y nombres.
 
 ¡Manos al código! ¡Que gane la creatividad y, por supuesto, ¡que gane la Selección Colombia!
+
+https://claude.ai/share/0b79b37b-8882-4e77-886f-39f4bce1c91d
