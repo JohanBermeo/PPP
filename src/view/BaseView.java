@@ -57,7 +57,6 @@ public class BaseView extends JFrame {
         btnVerLogros.addActionListener(e -> mostrarLogros());
         btnTablero.addActionListener(e -> mostrarTablero());
         btnSalir.addActionListener(e -> {
-        	System.exit(0);
         	isExit = true;
         });
         

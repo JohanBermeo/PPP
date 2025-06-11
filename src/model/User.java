@@ -9,6 +9,12 @@ public class User implements Serializable {
 	private String password;
 	private boolean passwordResetPending;
 	
+	public User(String username, String password, Boolean passwordReset) {
+		 this.username = username;
+		 this.password = password;
+		 this.passwordResetPending = passwordReset;  // Flag for password reset on first login
+	}
+	
 	public User(String username, String password) {
 		 this.username = username;
 		 this.password = password;
@@ -32,11 +38,11 @@ public class User implements Serializable {
 	}
 	
 	public boolean isPasswordResetPending() {
-	return passwordResetPending;
+		return passwordResetPending;
 	}
 	
 	public void setPasswordResetPending(boolean passwordResetPending) {
-	this.passwordResetPending = passwordResetPending;
+		this.passwordResetPending = passwordResetPending;
 	}
 	
 }
