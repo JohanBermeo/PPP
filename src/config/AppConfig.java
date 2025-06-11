@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class AppCofig {
+public class AppConfig {
     public static final String APP_NAME = "App Logros Personales";
     public static final String APP_VERSION = "1.0.0";
     public static final String APP_AUTHOR = "Juan Otálora, Johan Bermeo";
@@ -20,7 +20,7 @@ public class AppCofig {
     public static final String DEFAULT_ADMIN_PASSWORD = "admin123";
     public static final int MIN_PASSWORD_LENGTH = 6;
     public static final int MAX_PASSWORD_LENGTH = 20;
-    public static final in GENERATED_PASSWORD_LENGTH = 8;
+    public static final int GENERATED_PASSWORD_LENGTH = 8;
 
     public static final String USER_PREFIX = "user";
     public static final String ADMIN_PREFIX = "admin";
@@ -40,7 +40,7 @@ public class AppCofig {
     public static final String PASSWORD_CHARS = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyz0123456789";
     public static final String PASSWORD_SPECIAL_CHARS = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
-    public static final String PASSWORD_REGEX_LOW = "^.{" + MIN_PASWWORD_LENGTH + "," + MAX_PASSWORD_LENGTH + "}$";
+    public static final String PASSWORD_REGEX_LOW = "^.{" + MIN_PASSWORD_LENGTH + "," + MAX_PASSWORD_LENGTH + "}$";
     public static final String PASSWORD_REGEX_MEDIUM = "^(?=.*[a-zA-Z])(?=.*\\d).{" + MIN_PASSWORD_LENGTH + "," + MAX_PASSWORD_LENGTH + "}$";
     public static final String PASSWORD_REGEX_HIGH = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[" + PASSWORD_SPECIAL_CHARS + "]).{" + MIN_PASSWORD_LENGTH + "," + MAX_PASSWORD_LENGTH + "}$";
 
@@ -88,6 +88,19 @@ public class AppCofig {
         File dataDir = new File(DATA_DIRECTORY);
         if (!dataDir.exists()) {
             dataDir.mkdirs();
+        }
+    }
+
+    private static void compilePasswordPatterns() {
+        try {
+            passwordPatternLow = java.util.regex.Pattern.compile(PASSWORD_REGEX_LOW);
+            passwordPatternMedium = java.util.regex.Pattern.compile(PASSWORD_REGEX_MEDIUM);
+            passwordPatternHigh = java.util.regex.Pattern.compile(PASSWORD_REGEX_HIGH);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            System.err.println("Error compiling password regex patterns: " + e.getMessage());
+            passwordPatternLow = null;
+            passwordPatternMedium = null;
+            passwordPatternHigh = null;
         }
     }
 
@@ -149,6 +162,8 @@ public class AppCofig {
             return false;
         } 
 
+        String complexity = getProperty("app.password.complexity", "medium");
+
         try {
             switch (complexity.toLowerCase()){
                 case "low":
@@ -156,10 +171,10 @@ public class AppCofig {
                 case "medium":
                     return passwordPatternMedium != null && passwordPatternMedium.matcher(password).matches();
                 case "high":
-                    return passworPatternHigh != null && passwordPatternHigh.matcher(password).matches();
-                case default:
+                    return passwordPatternHigh != null && passwordPatternHigh.matcher(password).matches();
+                default:
                     return passwordPatternMedium != null && passwordPatternMedium.matcher(password).matches();
-                }
+            }
         } catch (Exception e) {
             return isValidPasswordFallback(password, complexity);
         }
