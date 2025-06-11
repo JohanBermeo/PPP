@@ -1,15 +1,15 @@
-package controller;
+package auth;
 
+import java.io.Serializable;
 import java.security.SecureRandom;
-import model.User;
 
-public class AuthController extends User {
+public class Admin extends User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
     private static int userCounter = 1;  // static counter shared by all Admin instances
     private SecureRandom random = new SecureRandom();
 
-    public AuthController(String username, String password) {
+    public Admin(String username, String password) {
         super(username, password);
     }
 
@@ -31,8 +31,8 @@ public class AuthController extends User {
         for (int i = 0; i < 8; i++) {
             sb.append(chars.charAt(random.nextInt(chars.length())));
         }
-        //return sb.toString();
         return "123";
+        //return sb.toString();
     }
     
     // Getter and setter for userCounter to persist static field

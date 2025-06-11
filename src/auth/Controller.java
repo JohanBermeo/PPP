@@ -1,26 +1,24 @@
-package controller;
+package auth;
 
 import javax.swing.*;
 
-import view.BaseView;
-import controller.AuthController;
-import model.User;
+import achievements.AchievementsApp;
 
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseController {
+public class Controller {
     private List<User> users = new ArrayList<>();
-    private List<AuthController> admins = new ArrayList<>();
+    private List<Admin> admins = new ArrayList<>();
 
     private static final String DATA_FILE = "data\\userdata.ser";
 
-    public BaseController() {
+    public Controller() {
         loadData();
         if (admins.isEmpty()) {
-            admins.add(new AuthController("admin", "admin123")); // default admin if none loaded
+            admins.add(new Admin("admin", "admin123")); // default admin if none loaded
         }
     }
 
@@ -53,7 +51,7 @@ public class BaseController {
     }
 
     private void adminLoginFlow() {
-        AuthController admin = (AuthController) validateUserLogin("admin");  // Your login dialog + validation method
+        Admin admin = (Admin) validateUserLogin("admin");  // Your login dialog + validation method
         
         if (admin == null) return;          // User cancelled login    
         JOptionPane.showMessageDialog(null, "Admin authenticated!");
@@ -69,8 +67,8 @@ public class BaseController {
         adminMenu(admin);
     }
 
-    private AuthController findAdmin(String username) {
-        for (AuthController a : admins) {
+    private Admin findAdmin(String username) {
+        for (Admin a : admins) {
             if (a.getUsername().equals(username)) {
                 return a;
             }
@@ -78,7 +76,7 @@ public class BaseController {
         return null;
     }
 
-    private void adminMenu(AuthController admin) {
+    private void adminMenu(Admin admin) {
         while (true) {
             String[] options = {"Create new user", "List users", "Remove user", "New admin", "Logout"};
             int choice = JOptionPane.showOptionDialog(null,
@@ -169,7 +167,7 @@ public class BaseController {
         // Fixed provisional password
         String provisionalPassword = "admin123";
 
-        AuthController newAdmin = new AuthController(username, provisionalPassword);
+        Admin newAdmin = new Admin(username, provisionalPassword);
         newAdmin.setPasswordResetPending(true); // Force password change on first login
         admins.add(newAdmin);
         saveData();
@@ -195,23 +193,12 @@ public class BaseController {
             }
         }
 
-        // Launch ToDoApp for authenticated user
-        //ToDoApp todoApp = new ToDoApp(user);
-        //todoApp.start();
-        
-        // Launch BalotoApp for authenticated user
-        // TODO: AQUI VA LA APLICACIÓN YA AUNTENTICADO EL USUARIO
-      
-        
-        BaseView ventana = new BaseView();
-        while (!ventana.getExit()){
-        	ventana.setVisible(true);
-        }
+        // Launch App for authenticated user
+        AchievementsApp app = new AchievementsApp(user);
+        app.start();
 
         // Save user data here if needed after ToDoApp closes
     }
-
-
 
     private User validateUserLogin(String accountType) {
         while (true) {
@@ -302,7 +289,7 @@ public class BaseController {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(DATA_FILE))) {
             out.writeObject(users);
             out.writeObject(admins);
-            out.writeInt(AuthController.getUserCounter());  // save static counter
+            out.writeInt(Admin.getUserCounter());  // save static counter
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error saving data: " + e.getMessage());
         }
@@ -316,13 +303,14 @@ public class BaseController {
 
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
             users = (List<User>) in.readObject();
-            admins = (List<AuthController>) in.readObject();
+            admins = (List<Admin>) in.readObject();
             int counter = in.readInt();
-            AuthController.setUserCounter(counter);
+            Admin.setUserCounter(counter);
         } catch (IOException | ClassNotFoundException e) {
             JOptionPane.showMessageDialog(null, "Error loading data: " + e.getMessage());
         }
     }
 }
        
+
 
